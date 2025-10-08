@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GAIA — Generative AI Accelerator</title>
+<meta name="description" content="GAIA is a Generative AI Accelerator delivering production-ready results in under a month — no IT, no infrastructure. Faster, cheaper, lower error rates." />
+<style>
+  :root{
+    --bg:#0b1017;
+    --bg-soft:#0e1622;
+    --card:#121b28cc;
+    --muted:#9fb0c9;
+    --text:#eaf2ff;
+    --accent:#79ffe1;
+    --accent-2:#3ebd93;
+    --accent-3:#6da7ff;
+    --warning:#ffd166;
+    --good:#64d59b;
+    --bad:#ff7a7a;
+    --shadow: 0 10px 30px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.02) inset;
+    --radius:22px;
+    --radius-sm:14px;
+    --maxw:1100px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+    background: radial-gradient(1200px 900px at 20% -10%, rgba(109,167,255,.28), transparent 60%),
+                radial-gradient(1000px 800px at 100% 10%, rgba(62,189,147,.20), transparent 60%),
+                linear-gradient(180deg, #0b1017 0%, #0b1017 100%);
+    color:var(--text);
+    line-height:1.6;
+  }
+  a{color:var(--accent-3); text-decoration:none}
+  .container{max-width:var(--maxw); margin:0 auto; padding:0 20px}
+  .pill{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.06); color:#cfe3ff; font-size:12px; letter-spacing:.3px}
+  .badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.06); color:#cfe3ff; font-size:11px; letter-spacing:.3px}
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    padding:14px 20px; border-radius:14px; border:1px solid rgba(255,255,255,.1);
+    background:linear-gradient(180deg, rgba(121,255,225,.18), rgba(121,255,225,.05));
+    color:#052320; font-weight:700; letter-spacing:.3px;
+    box-shadow:0 8px 24px rgba(121,255,225,.18);
+    transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn:hover{transform:translateY(-2px); box-shadow:0 14px 32px rgba(121,255,225,.24)}
+  .btn.secondary{background:rgba(255,255,255,.06); color:#eaf2ff; box-shadow:none}
+  .btn.small{padding:10px 14px; border-radius:12px; font-size:14px}
+  header.hero{
+    position:relative; padding:84px 0 40px; overflow:hidden;
+  }
+  .glow{
+    position:absolute; inset:auto auto 0 -10%;
+    width:140%; height:70%;
+    background: radial-gradient(600px 400px at 20% 0%, rgba(109,167,255,.20), transparent 60%),
+               radial-gradient(600px 420px at 80% 20%, rgba(121,255,225,.14), transparent 60%);
+    filter: blur(30px); pointer-events:none; opacity:.8;
+  }
+  .hero h1{
+    font-size: clamp(32px, 5vw, 56px);
+    line-height:1.05; margin:14px 0 14px;
+  }
+  .hero p.lead{max-width:780px; font-size: clamp(16px, 2.2vw, 20px); color:#c9d9f2}
+  .checklist{display:flex; flex-wrap:wrap; gap:10px; margin:20px 0}
+  .check{display:inline-flex; gap:8px; align-items:center; background:rgba(255,255,255,.06);
+    padding:8px 12px; border-radius:12px; font-size:13px; color:#d7e7ff}
+  .hero-cta{display:flex; gap:12px; flex-wrap:wrap; margin-top:26px}
+  .card{
+    background:var(--card); backdrop-filter: blur(10px);
+    border:1px solid rgba(255,255,255,.08); border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+  section{padding:54px 0}
+  .grid{display:grid; gap:18px}
+  .grid.cols-3{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .grid.cols-2{grid-template-columns:repeat(2, minmax(0,1fr))}
+  @media (max-width:900px){ .grid.cols-3,.grid.cols-2{grid-template-columns:1fr} }
+  .section-title{font-size:26px; margin:0 0 16px}
+  .muted{color:var(--muted)}
+  .card .hd{display:flex; justify-content:space-between; align-items:center; margin-bottom:12px}
+  .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
+  @media (max-width:900px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+  .kpi{padding:18px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07)}
+  .kpi h3{margin:0; font-size:24px}
+  .kpi p{margin:6px 0 0; color:#b9c9e4; font-size:13px}
+  .stack{display:flex; gap:10px; flex-wrap:wrap}
+  .logo-pill{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); font-weight:600; letter-spacing:.3px; color:#d7e7ff}
+  .example{padding:18px; border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03)); border:1px solid rgba(255,255,255,.07)}
+  .example small{color:#a8bad7; display:block; margin-top:6px}
+  .how-step{display:flex; gap:14px; align-items:flex-start}
+  .how-step .n{min-width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-weight:800; background:rgba(121,255,225,.12); color:#0e2f28; border:1px solid rgba(121,255,225,.25)}
+  .price{display:flex; flex-direction:column; gap:12px; padding:22px}
+  .price h3{margin:0}
+  .price .num{font-size:32px; font-weight:900}
+  .price ul{padding-left:18px; margin:0}
+  .case-metrics{display:flex; gap:10px; flex-wrap:wrap}
+  .chip{padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); font-size:12px}
+  .faq details{background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:14px 16px}
+  .faq summary{cursor:pointer; font-weight:700}
+  .faq details + details{margin-top:10px}
+  .leadform{display:grid; gap:14px}
+  .field{display:flex; flex-direction:column; gap:6px}
+  label{font-size:13px; color:#cfe3ff}
+  input, textarea, select{
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); color:var(--text);
+    border-radius:12px; padding:12px 14px; outline:none;
+  }
+  input:focus,textarea:focus,select:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(121,255,225,.15)}
+  .note{font-size:12px; color:#a5badb}
+  .disclaimer{font-size:12px; color:#9bb1d4}
+  footer{padding:40px 0 60px; color:#a3b7d6}
+  .bar{height:1px; background:linear-gradient(90deg, rgba(121,255,225,.0), rgba(121,255,225,.4), rgba(121,255,225,.0)); margin:26px 0}
+  /* Reveal on scroll */
+  .reveal{opacity:0; transform:translateY(12px); transition:opacity .6s ease, transform .6s ease}
+  .reveal.on{opacity:1; transform:none}
+  /* Utility */
+  .center{text-align:center}
+  .row{display:flex; gap:12px; flex-wrap:wrap}
+  .justify-between{justify-content:space-between}
+  .nowrap{white-space:nowrap}
+	/* Increase contrast for primary CTAs ("Get a 25-min Discovery Call", "Request my call") */
+.btn{
+  color: var(--text);  /* was #052320 */
+  background: linear-gradient(180deg, rgba(121,255,225,.40), rgba(121,255,225,.22)); /* higher opacity */
+  border-color: rgba(255,255,255,.20);
+  box-shadow: 0 10px 28px rgba(121,255,225,.28);
+}
+.btn:hover{
+  box-shadow: 0 16px 40px rgba(121,255,225,.36);
+}
+
+/* Boost readability of the 1, 2, 3 numbers in “How it works” */
+.how-step .n{
+  background: rgba(121,255,225,.55); /* brighter chip */
+  color: #0b1017;                     /* dark text on light chip */
+  border-color: rgba(121,255,225,.85);
+}
+/* 1) Lock the page gradients to the viewport to avoid horizontal seams on scroll */
+body{ background-attachment: fixed; }
+
+/* 2) Fade out the hero glow so its bottom edge never creates a hard line */
+.glow{
+  -webkit-mask-image: linear-gradient(to bottom, #000 65%, rgba(0,0,0,0) 100%);
+          mask-image: linear-gradient(to bottom, #000 65%, rgba(0,0,0,0) 100%);
+}
+
+/* 3) Prevent 1px compositing artifacts from blurred/glassy cards on some GPUs */
+.card{
+  -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+  isolation: isolate;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="glow" aria-hidden="true"></div>
+  <div class="container">
+    <span class="pill">⚡ Ready in under 1 month • No IT • No infrastructure</span>
+    <h1>GAIA — Generative AI Accelerator</h1>
+    <p class="lead">
+      Deploy AI that actually moves the needle. We craft a certified, statistically tested <strong>“super system prompt”</strong> for your workflow so you cut time, cut cost and cut errors — with measurable ROI and no integrations required.
+    </p>
+    <div class="checklist">
+      <span class="check">✅ Faster processes</span>
+      <span class="check">✅ Lower error rates</span>
+      <span class="check">✅ Immediate business impact</span>
+      <span class="check">✅ Risk-free pilot</span>
+    </div>
+    <div class="hero-cta">
+      <a class="btn" href="#lead">Get a 25-min Discovery Call</a>
+      <a class="btn secondary" href="#how">See how it works</a>
+    </div>
+    <div class="bar"></div>
+    <div class="row justify-between">
+      <div class="stack" aria-label="Supported by">
+        <span class="badge">Powered by OpenAI</span>
+				<span class="badge">Google for Startups</span>
+        <span class="badge">Microsoft for Startups</span>
+        <span class="badge">IBM for Startups</span>
+        <span class="badge">NVIDIA Inception</span>
+        <span class="badge">INSEAD AI Venture Lab</span>
+      </div>
+      <div class="badge">WIPO-recognised certificate 3079/D/24</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="container reveal">
+    <div class="grid cols-3">
+      <div class="kpi">
+        <h3>10+ clients</h3>
+        <p>Already live with 80+ applications</p>
+      </div>
+      <div class="kpi">
+        <h3>5× ROI</h3>
+        <p>Typical first-year return; breakeven ≈ 2 months</p>
+      </div>
+      <div class="kpi">
+        <h3>0€ infra/ APIs</h3>
+        <p>No IT systems, integrations, or infrastructure</p>
+      </div>
+    </div>
+  </section>
+
+	    <div class="bar"></div>
+	
+  <section id="value" class="container reveal">
+    <br>
+		<br>
+		<h2 class="section-title">Why GAIA works</h2>
+    <div class="grid cols-3">
+      <div class="card" style="padding:18px">
+        <div class="hd"><strong>Certified prompt architecture</strong><span class="chip">Confidence &gt; 95%</span></div>
+        <p class="muted">We design a multi-page, bulk-tested system prompt tailored to your business task, validated statistically and curated by humans</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <div class="hd"><strong>Marketplace of fine-tunings</strong><span class="chip">80+ live apps</span></div>
+        <p class="muted">Leverage a growing library of domain-tested templates, not just a raw model. Faster setup, higher quality</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <div class="hd"><strong>Model-agnostic & future-proof</strong><span class="chip">LLM flexibility</span></div>
+        <p class="muted">We adapt to multiple LLMs as needed</p>
+      </div>
+    </div>
+  </section>
+	
+    <div class="bar"></div>
+	
+  <section id="examples" class="container reveal">
+    <br>
+		<h2 class="section-title">What GAIA can do for you <span class="muted">(use cases)</span></h2>
+    <div class="grid cols-3">
+      <div class="example">
+        <strong>Content & Marketing</strong>
+        <ul class="muted">
+          <li>SEO/GEO-optimised product descriptions</li>
+          <li>Automated blog & social content</li>
+          <li>Video script generation</li>
+        </ul>
+        <small>Heavy/repetitive creative tasks handled end-to-end</small>
+      </div>
+      <div class="example">
+        <strong>Customer Operations</strong>
+        <ul class="muted">
+          <li>Personalised chatbots & response generation</li>
+          <li>Sentiment analysis & multilingual support</li>
+          <li>Real-time translation</li>
+        </ul>
+        <small>Reduce handle time while improving CX</small>
+      </div>
+      <div class="example">
+        <strong>Dev & Back-office</strong>
+        <ul class="muted">
+          <li>Code generation, review & test simulation</li>
+          <li>Document & contract analysis</li>
+          <li>Automated reporting & summaries</li>
+        </ul>
+        <small>Cut cycle time across internal workflows</small>
+      </div>
+    </div>
+    <p class="note">Looking for something specific? Tell us your workflow during the discovery call</p>
+  </section>
+	
+	    <div class="bar"></div>
+
+  <section id="cases" class="container reveal">
+    <br>
+		<h2 class="section-title">Real outcomes</h2>
+    <div class="grid cols-3">
+      <div class="card" style="padding:18px">
+        <h3 style="margin:0 0 8px">Portuguese Retailer</h3>
+        <p class="muted">Inventory processing</p>
+        <div class="case-metrics">
+          <span class="chip">7× faster</span>
+          <span class="chip">Compliant outputs</span>
+        </div>
+      </div>
+      <div class="card" style="padding:18px">
+        <h3 style="margin:0 0 8px">Spanish Bank</h3>
+        <p class="muted">Competition analysis with vision & scraping</p>
+        <div class="case-metrics">
+          <span class="chip">10× cheaper</span>
+          <span class="chip">Weekly cadence</span>
+        </div>
+      </div>
+      <div class="card" style="padding:18px">
+        <h3 style="margin:0 0 8px">U.S. SaaS</h3>
+        <p class="muted">Engineer onboarding to a new language</p>
+        <div class="case-metrics">
+          <span class="chip">10× cheaper</span>
+          <span class="chip">Faster learning curve</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bar"></div>
+
+  </section>
+
+  <section id="how" class="container reveal">
+    <br>
+		<h2 class="section-title">How it works</h2>
+    <div class="grid cols-3">
+      <div class="how-step example">
+        <div class="n">1</div>
+        <div>
+          <strong>Discovery (1 to 5 days)</strong>
+          <p class="muted">We map your single highest-leverage task and define expected outputs, constraints, and success metrics</p>
+        </div>
+      </div>
+      <div class="how-step example">
+        <div class="n">2</div>
+        <div>
+          <strong>Build & bulk-test</strong>
+          <p class="muted">We craft your multi-page “super system prompt” and statistically validate it with robust confidence intervals</p>
+        </div>
+      </div>
+      <div class="how-step example">
+        <div class="n">3</div>
+        <div>
+          <strong>Pilot & scale</strong>
+          <p class="muted">You run a production-ready solution. Most clients see breakeven in 2 months</p>
+        </div>
+      </div>
+    </div>
+  </section>
+	
+	    <div class="bar"></div>
+
+  <section id="pricing" class="container reveal">
+    <br>
+		<h2 class="section-title">Simple pricing</h2>
+    <div class="grid cols-2">
+      <div class="card price">
+        <h3>Setup</h3>
+        <div class="num">from €5,000 <span class="muted" style="font-size:14px">one-off</span></div>
+        <ul class="muted">
+          <li>System prompt design</li>
+          <li>Bulk-tests + client tests</li>
+          <li>Fine-tuning</li>
+          <li>Confidence &gt; 95%</li>
+        </ul>
+        <p class="note">Package-ready from €5k; fully tailor-made up to €20k</p>
+      </div>
+      <div class="card price">
+        <h3>Licensing</h3>
+        <div class="num">€5,000/year</div>
+        <ul class="muted">
+          <li>Always-updated model mix</li>
+          <li>Support included</li>
+          <li>Ongoing prompt tuning</li>
+          <li>Unlimited users • 24/7</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+	
+	    <div class="bar"></div>
+
+  <section id="faq" class="container reveal faq">
+    <br>
+		<h2 class="section-title">FAQ</h2>
+    <details>
+      <summary>Do we need our IT team involved?</summary>
+      <p class="muted">No. GAIA runs without your internal systems or infrastructure, making it safe and fast to pilot.</p>
+    </details>
+    <details>
+      <summary>Will we have extra costs for tokens or API usage?</summary>
+      <p class="muted">No — your operating expense is <strong>0€</strong> beyond the GAIA license. We don’t rely on external APIs, so there are no hidden usage fees.</p>
+    </details>
+		<details>
+      <summary>Which models do you use?</summary>
+      <p class="muted">We prefer OpenAI models and run the tool as a GPT application, directly exposed to a > 800M users marketplace.</p>
+    </details>
+    <details>
+      <summary>What kind of tasks benefit most?</summary>
+      <p class="muted">Heavy, repetitive or precision-critical tasks in content, support, Dev/QA and operations. We’ll prioritize one task for the pilot.</p>
+    </details>
+    <details>
+      <summary>How quickly will we see ROI?</summary>
+      <p class="muted">Most clients breakeven in ~2 months, with typical first-year ROI around 5×, depending on volume and baseline.</p>
+    </details>
+  </section>
+	
+	    <div class="bar"></div>
+
+  <section id="lead" class="container reveal">
+    <div class="grid cols-2">
+      <div class="card" style="padding:22px">
+        <h2 class="section-title" style="margin-top:0">Get your free discovery call</h2>
+        <p class="muted">Tell us about your workflow. We’ll share the quickest path to a production-ready solution and forecast the impact on time, cost, and accuracy</p>
+        <form id="leadForm" class="leadform" novalidate>
+          <div class="grid cols-2">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input id="name" name="name" placeholder="Alex Morgan" required />
+            </div>
+            <div class="field">
+              <label for="email">Work email</label>
+              <input id="email" name="email" type="email" placeholder="alex@company.com" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="company">Company</label>
+            <input id="company" name="company" placeholder="Acme Inc." required />
+          </div>
+          <div class="grid cols-2">
+            <div class="field">
+              <label for="role">Role</label>
+              <input id="role" name="role" placeholder="Head of Ops" />
+            </div>
+            <div class="field">
+              <label for="size">Company size</label>
+              <select id="size" name="size">
+                <option value="">Select…</option>
+                <option>1–10</option><option>11–50</option><option>51–200</option>
+                <option>201–1000</option><option>1000+</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="goal">What task do you want to improve first?</label>
+            <textarea id="goal" name="goal" rows="4" placeholder="e.g., product descriptions in 3 languages with SEO/GEO compliance"></textarea>
+          </div>
+          <div class="row">
+            <label class="badge" style="cursor:pointer">
+              <input type="checkbox" id="consent" required style="accent-color:#3ebd93; margin-right:8px" />
+              I agree to be contacted about GAIA.
+            </label>
+          </div>
+          <div class="row">
+            <button class="btn" type="submit">Request my call</button>
+            <a href="#pricing" class="btn secondary">See pricing</a>
+          </div>
+          <p class="disclaimer">We’ll never share your information. You can opt out at any time</p>
+          <p id="formMsg" class="note" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+      <div class="example">
+        <strong>Why teams book a call</strong>
+        <ul class="muted">
+          <li>Validate a pilot in under a month</li>
+          <li>Estimate time & cost savings for your process</li>
+          <li>Decide the best workflow for human-in-the-loop</li>
+        </ul>
+        <div class="bar"></div>
+        <strong>At a glance</strong>
+        <ul class="muted">
+          <li>80+ real-world apps</li>
+          <li>0€ infra & integration costs</li>
+          <li>Unlimited users • 24/7</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="container">
+  <div class="bar"></div>
+  <div class="row justify-between">
+    <div>© <span id="year"></span> GAIA — Generative AI Accelerator</div>
+    <div class="stack">
+      <a class="logo-pill" href="#faq">FAQ</a>
+      <a class="logo-pill" href="#pricing">Pricing</a>
+      <a class="logo-pill" href="#lead">Book a call</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Smooth scroll for in-page links
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      const id = a.getAttribute('href');
+      if(id.length>1){
+        e.preventDefault();
+        document.querySelector(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+
+  // Reveal on scroll
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){ entry.target.classList.add('on'); io.unobserve(entry.target); }
+    });
+  }, {threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// Lead form: validation + open mail client with form data
+const form = document.getElementById('leadForm');
+const msg = document.getElementById('formMsg');
+form.addEventListener('submit', (e)=>{
+  e.preventDefault();
+  msg.textContent='';
+  const data = Object.fromEntries(new FormData(form).entries());
+
+  // Basic checks
+  if(!data.name || !data.email || !data.company || !document.getElementById('consent').checked){
+    msg.textContent = 'Please complete name, work email, company and consent.';
+    msg.style.color = '#ffb4b4';
+    return;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)){
+    msg.textContent = 'Please enter a valid work email.';
+    msg.style.color = '#ffb4b4';
+    return;
+  }
+
+  // Build mailto link
+  const to = 'gp@algorithmg.xyz';
+  const subject = `GAIA Discovery Call — ${data.company || data.name}`;
+  const body = `Hi GAIA team,
+
+I'd like to book a 20-min discovery call.
+
+Name: ${data.name}
+Work email: ${data.email}
+Company: ${data.company}
+Role: ${data.role || '-'}
+Company size: ${data.size || '-'}
+Priority task:
+${(data.goal || '-').trim()}
+
+Consent: Yes`;
+
+  const mailto = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+  // Open default mail client
+  window.open(mailto, '_blank');
+
+  // Open Calendly booking page in a new tab
+  window.open('https://calendly.com/gperdigao', '_blank');
+});
+
+
+  // Year in footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Simple keyboard focus outlines for accessibility
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'Tab'){ document.body.classList.add('kbd'); }
+  });
+</script>
+
+<!-- Optional structured data for richer previews -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Corporation",
+  "name": "GAIA — Generative AI Accelerator",
+  "description": "Production-ready AI deployments in under a month. Certified, statistically tested system prompts. No integrations or infrastructure required.",
+  "brand": "GAIA",
+  "url": "https://example.com",
+  "founder": "Gonçalo Perdigão",
+  "knowsAbout": ["Generative AI", "LLM Orchestration", "Prompt Engineering", "Enterprise AI"],
+  "slogan": "Cut time, cut cost, cut errors.",
+  "makesOffer": {
+    "@type": "Offer",
+    "price": "5000.00",
+    "priceCurrency": "EUR",
+    "description": "Setup from €5,000 (one-off). Licensing €5,000/year."
+  }
+}
+</script>
+</body>
+</html>
